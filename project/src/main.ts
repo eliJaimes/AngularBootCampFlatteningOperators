@@ -7,8 +7,8 @@ import {
 	fromEvent,
 	map,
 	merge,
+	mergeMap,
 	Observable,
-	switchMap,
 } from 'rxjs';
 
 // References to UI buttons
@@ -59,13 +59,13 @@ const allButton$: Observable<ButtonsPayloadT> = merge(
 	creditCardButton$,
 );
 
-// 'switchMap' pipeable operator example
+// 'mergeMap' pipeable operator example
 
 allButton$
 	.pipe(
 		// Projects each source value to an Observable which is merged in the output
-		// Observable, emitting values only from the most recently projected Observable
-		switchMap(
+		// Observable
+		mergeMap(
 			(value: ButtonsPayloadT): Observable<AjaxResponse<unknown>> =>
 				ajax(getApiURL(value)).pipe(
 					// Catches errors on the observable to be handled by returning a new observable

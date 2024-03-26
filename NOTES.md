@@ -72,3 +72,7 @@ npm i rxjs
 # 'of' creation operator example with delay
 
 # 'fromEvent' creation operator example
+
+# 'ajax' creation operator example
+
+https://random-data-api.com/documentation

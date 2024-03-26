@@ -29,20 +29,10 @@ const userButton$: Observable<'users'> = fromEvent<MouseEvent>(
 	'click',
 ).pipe(map((): 'users' => 'users'));
 
-/* FIXME: it wasn't 'credit-cards' but 'credit_cards' */
-
 const creditCardButton$: Observable<'credit_cards'> = fromEvent<MouseEvent>(
 	$creditCardButton,
 	'click',
 ).pipe(map((): 'credit_cards' => 'credit_cards'));
-
-type ButtonsPayloadT = 'beers' | 'users' | 'credit_cards';
-
-const allButton$: Observable<ButtonsPayloadT> = merge(
-	beerButton$,
-	userButton$,
-	creditCardButton$,
-);
 
 // Helper methods
 
@@ -53,30 +43,33 @@ const getApiURL: (param: string) => string = (param: string): string => `
 	${randomApiBaseURL}/${param}
 `;
 
-// Call API when user clicks on a button
+const allButton$: Observable<Observable<AjaxResponse<unknown>>> = merge(
+	beerButton$.pipe(
+		map(
+			(value: 'beers'): Observable<AjaxResponse<unknown>> =>
+				ajax(getApiURL(value)),
+		),
+	),
+	userButton$.pipe(
+		map(
+			(value: 'users'): Observable<AjaxResponse<unknown>> =>
+				ajax(getApiURL(value)),
+		),
+	),
+	creditCardButton$.pipe(
+		map(
+			(value: 'credit_cards'): Observable<AjaxResponse<unknown>> =>
+				ajax(getApiURL(value)),
+		),
+	),
+);
 
-/* FIXME: have nested subscriptions is definitely a bad practice */
+// Call API when user clicks on a button
 
 allButton$.subscribe({
 	complete: (): void => console.log('✅ - Done'),
 	error: (error: Error): void =>
 		console.error('❌ - Something wrong occurred: %O', error),
-	next: (value: ButtonsPayloadT): void => {
-		console.log('✔️ - Got value %O', value);
-
-		const ajaxExample$: Observable<AjaxResponse<unknown>> = ajax(
-			getApiURL(value),
-		);
-
-		ajaxExample$.subscribe({
-			complete: (): void => console.log('✅ - Done'),
-			error: (error: Error): void =>
-				console.error('❌ - Something wrong occurred: %O', error),
-			next: (value: AjaxResponse<unknown>): void => {
-				console.log('✔️ - Got value %O', value);
-				const payload: unknown = value.response;
-				console.log('payload: %O', payload);
-			},
-		});
-	},
+	next: (value: Observable<AjaxResponse<unknown>>): void =>
+		console.log('✔️ - Got value %O', value),
 });

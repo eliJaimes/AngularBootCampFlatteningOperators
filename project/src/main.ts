@@ -1,7 +1,15 @@
 /* ••[1]••••••••••••••••••••••••• main.ts •••••••••••••••••••••••••••••• */
 
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { fromEvent, map, merge, mergeAll, Observable } from 'rxjs';
+import {
+	catchError,
+	concatMap,
+	EMPTY,
+	fromEvent,
+	map,
+	merge,
+	Observable,
+} from 'rxjs';
 
 // References to UI buttons
 
@@ -43,35 +51,33 @@ const getApiURL: (param: string) => string = (param: string): string => `
 	${randomApiBaseURL}/${param}
 `;
 
-const allButton$: Observable<Observable<AjaxResponse<unknown>>> = merge(
-	beerButton$.pipe(
-		map(
-			(value: 'beers'): Observable<AjaxResponse<unknown>> =>
-				ajax(getApiURL(value)),
-		),
-	),
-	userButton$.pipe(
-		map(
-			(value: 'users'): Observable<AjaxResponse<unknown>> =>
-				ajax(getApiURL(value)),
-		),
-	),
-	creditCardButton$.pipe(
-		map(
-			(value: 'credit_cards'): Observable<AjaxResponse<unknown>> =>
-				ajax(getApiURL(value)),
-		),
-	),
+type ButtonsPayloadT = 'beers' | 'users' | 'credit_cards';
+
+const allButton$: Observable<ButtonsPayloadT> = merge(
+	beerButton$,
+	userButton$,
+	creditCardButton$,
 );
 
-// Call API when user clicks on a button
+// 'concatMap' pipeable operator example
 
-// 'mergeAll' pipeable operator example
-
-allButton$.pipe(mergeAll()).subscribe({
-	complete: (): void => console.log('✅ - Done'),
-	error: (error: Error): void =>
-		console.error('❌ - Something wrong occurred: %O', error),
-	next: (value: AjaxResponse<unknown>): void =>
-		console.log('✔️ - Got value %O', value),
-});
+allButton$
+	.pipe(
+		// Projects each source value to an Observable which is merged in the output
+		// Observable, in a serialized fashion waiting for each one to complete before
+		// merging the next
+		concatMap(
+			(value: ButtonsPayloadT): Observable<AjaxResponse<unknown>> =>
+				ajax(getApiURL(value)),
+		),
+		// Catches errors on the observable to be handled by returning a new observable
+		// or throwing an error
+		// catchError((): Observable<never> => EMPTY),
+	)
+	.subscribe({
+		complete: (): void => console.log('✅ - Done'),
+		error: (error: Error): void =>
+			console.error('❌ - Something wrong occurred: %O', error),
+		next: (value: AjaxResponse<unknown> | {}): void =>
+			console.log('✔️ - Got value %O', value),
+	});

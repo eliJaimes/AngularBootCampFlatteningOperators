@@ -19,3 +19,8 @@ Done. Now run:
   npm install
   npm run dev
 ```
+
+# Do clean up
+
+- Remove unnecessary files
+- Clean up index.html, main.ts and style.css

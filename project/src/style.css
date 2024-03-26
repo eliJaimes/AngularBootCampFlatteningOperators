@@ -1,6 +1,7 @@
 /* ••[1]••••••••••••••••••••••••• style.css •••••••••••••••••••••••••••••• */
 
-/* stylelint-disable color-named */
-html {
-	background: black;
-}
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;

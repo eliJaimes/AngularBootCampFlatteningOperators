@@ -24,3 +24,39 @@ Done. Now run:
 
 - Remove unnecessary files
 - Clean up index.html, main.ts and style.css
+
+# Install Tailwind CSS
+
+https://tailwindcss.com/docs/guides/vite
+
+```shell
+npm i -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+On 'project/tailwind.config.js' set
+
+```js
+/* ••[1]••••••••••••••••••••••••• tailwind.config.js •••••••••••••••••••••••••••••• */
+
+/** @type {import('tailwindcss').Config} */
+export default {
+	content: ['./index.html', './src/**/*.ts'],
+	theme: {
+		extend: {},
+	},
+	plugins: [],
+};
+```
+
+On 'project/src/style.css' include
+
+```css
+/* ••[1]••••••••••••••••••••••••• style.css •••••••••••••••••••••••••••••• */
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+```

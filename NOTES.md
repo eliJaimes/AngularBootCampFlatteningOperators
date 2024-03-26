@@ -84,3 +84,5 @@ https://random-data-api.com/documentation
 # Call API when user clicks on a button
 
 # Call API when user clicks on a button (refactor)
+
+# 'mergeAll' pipeable operator example

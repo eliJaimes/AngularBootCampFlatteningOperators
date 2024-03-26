@@ -1,7 +1,7 @@
 /* ••[1]••••••••••••••••••••••••• main.ts •••••••••••••••••••••••••••••• */
 
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { fromEvent, map, merge, Observable } from 'rxjs';
+import { fromEvent, map, merge, mergeAll, Observable } from 'rxjs';
 
 // References to UI buttons
 
@@ -66,10 +66,12 @@ const allButton$: Observable<Observable<AjaxResponse<unknown>>> = merge(
 
 // Call API when user clicks on a button
 
-allButton$.subscribe({
+// 'mergeAll' pipeable operator example
+
+allButton$.pipe(mergeAll()).subscribe({
 	complete: (): void => console.log('✅ - Done'),
 	error: (error: Error): void =>
 		console.error('❌ - Something wrong occurred: %O', error),
-	next: (value: Observable<AjaxResponse<unknown>>): void =>
+	next: (value: AjaxResponse<unknown>): void =>
 		console.log('✔️ - Got value %O', value),
 });

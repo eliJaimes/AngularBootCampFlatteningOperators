@@ -78,3 +78,5 @@ npm i rxjs
 https://random-data-api.com/documentation
 
 # 'map' pipeable operator example
+
+# 'merge' creation operator example

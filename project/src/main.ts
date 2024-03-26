@@ -1,23 +1,52 @@
 /* ••[1]••••••••••••••••••••••••• main.ts •••••••••••••••••••••••••••••• */
 
-import { fromEvent, map, Observable } from 'rxjs';
+import { fromEvent, map, merge, Observable } from 'rxjs';
 
-// 'map' pipeable operator example
+// 'merge' creation operator example
+
+// References to UI buttons
 
 const $beerButton: HTMLButtonElement = document.querySelector(
 	'[data-beer]',
 ) as HTMLButtonElement;
 
-console.log('$beerButton: %O', $beerButton);
+const $userButton: HTMLButtonElement = document.querySelector(
+	'[data-user]',
+) as HTMLButtonElement;
 
-const beerButton$: Observable<'beer'> = fromEvent<MouseEvent>(
+const $creditCardButton: HTMLButtonElement = document.querySelector(
+	'[data-credit-card]',
+) as HTMLButtonElement;
+
+// Observables that respond to clicks on buttons but map the data
+
+const beerButton$: Observable<'beers'> = fromEvent<MouseEvent>(
 	$beerButton,
 	'click',
-).pipe(map((): 'beer' => 'beer'));
+).pipe(map((): 'beers' => 'beers'));
 
-beerButton$.subscribe({
+const userButton$: Observable<'users'> = fromEvent<MouseEvent>(
+	$userButton,
+	'click',
+).pipe(map((): 'users' => 'users'));
+
+const creditCardButton$: Observable<'credit-cards'> = fromEvent<MouseEvent>(
+	$creditCardButton,
+	'click',
+).pipe(map((): 'credit-cards' => 'credit-cards'));
+
+type ButtonsPayloadT = 'beers' | 'users' | 'credit-cards';
+
+const allButton$: Observable<ButtonsPayloadT> = merge(
+	beerButton$,
+	userButton$,
+	creditCardButton$,
+);
+
+allButton$.subscribe({
 	complete: (): void => console.log('✅ - Done'),
 	error: (error: Error): void =>
 		console.error('❌ - Something wrong occurred: %O', error),
-	next: (value: 'beer'): void => console.log('✔️ - Got value %O', value),
+	next: (value: ButtonsPayloadT): void =>
+		console.log('✔️ - Got value %O', value),
 });

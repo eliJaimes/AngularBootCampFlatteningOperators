@@ -4,10 +4,10 @@ import { ajax, AjaxResponse } from 'rxjs/ajax';
 import {
 	catchError,
 	EMPTY,
+	exhaustMap,
 	fromEvent,
 	map,
 	merge,
-	mergeMap,
 	Observable,
 } from 'rxjs';
 
@@ -59,13 +59,13 @@ const allButton$: Observable<ButtonsPayloadT> = merge(
 	creditCardButton$,
 );
 
-// 'mergeMap' pipeable operator example
+// 'exhaustMap' pipeable operator example
 
 allButton$
 	.pipe(
 		// Projects each source value to an Observable which is merged in the output
-		// Observable
-		mergeMap(
+		// Observable only if the previous projected Observable has completed
+		exhaustMap(
 			(value: ButtonsPayloadT): Observable<AjaxResponse<unknown>> =>
 				ajax(getApiURL(value)).pipe(
 					// Catches errors on the observable to be handled by returning a new observable

@@ -92,3 +92,5 @@ https://random-data-api.com/documentation
 # 'switchMap' pipeable operator example
 
 # 'mergeMap' pipeable operator example
+
+# 'exhaustMap' pipeable operator example

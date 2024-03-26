@@ -80,3 +80,5 @@ https://random-data-api.com/documentation
 # 'map' pipeable operator example
 
 # 'merge' creation operator example
+
+# Call API when user clicks on a button

@@ -76,3 +76,5 @@ npm i rxjs
 # 'ajax' creation operator example
 
 https://random-data-api.com/documentation
+
+# 'map' pipeable operator example

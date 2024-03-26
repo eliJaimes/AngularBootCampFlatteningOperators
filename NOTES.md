@@ -60,3 +60,9 @@ On 'project/src/style.css' include
 
 @tailwind utilities;
 ```
+
+# Add RxJs to the project
+
+```shell
+npm i rxjs
+```

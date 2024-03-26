@@ -66,3 +66,5 @@ On 'project/src/style.css' include
 ```shell
 npm i rxjs
 ```
+
+# 'of' creation operator example

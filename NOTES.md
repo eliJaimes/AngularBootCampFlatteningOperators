@@ -88,3 +88,5 @@ https://random-data-api.com/documentation
 # 'mergeAll' pipeable operator example
 
 # 'concatMap' pipeable operator example
+
+# 'switchMap' pipeable operator example

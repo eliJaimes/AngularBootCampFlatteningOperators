@@ -3,12 +3,12 @@
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import {
 	catchError,
-	concatMap,
 	EMPTY,
 	fromEvent,
 	map,
 	merge,
 	Observable,
+	switchMap,
 } from 'rxjs';
 
 // References to UI buttons
@@ -59,20 +59,20 @@ const allButton$: Observable<ButtonsPayloadT> = merge(
 	creditCardButton$,
 );
 
-// 'concatMap' pipeable operator example
+// 'switchMap' pipeable operator example
 
 allButton$
 	.pipe(
 		// Projects each source value to an Observable which is merged in the output
-		// Observable, in a serialized fashion waiting for each one to complete before
-		// merging the next
-		concatMap(
+		// Observable, emitting values only from the most recently projected Observable
+		switchMap(
 			(value: ButtonsPayloadT): Observable<AjaxResponse<unknown>> =>
-				ajax(getApiURL(value)),
+				ajax(getApiURL(value)).pipe(
+					// Catches errors on the observable to be handled by returning a new observable
+					// or throwing an error
+					catchError((): Observable<never> => EMPTY),
+				),
 		),
-		// Catches errors on the observable to be handled by returning a new observable
-		// or throwing an error
-		// catchError((): Observable<never> => EMPTY),
 	)
 	.subscribe({
 		complete: (): void => console.log('✅ - Done'),

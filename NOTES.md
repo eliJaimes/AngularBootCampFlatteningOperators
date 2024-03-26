@@ -70,3 +70,5 @@ npm i rxjs
 # 'of' creation operator example
 
 # 'of' creation operator example with delay
+
+# 'fromEvent' creation operator example

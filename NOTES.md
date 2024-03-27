@@ -94,3 +94,5 @@ https://random-data-api.com/documentation
 # 'mergeMap' pipeable operator example
 
 # 'exhaustMap' pipeable operator example
+
+# 'concatMap', 'switchMap', 'mergeMap', 'exhaustMap' pipeable operator comparison
